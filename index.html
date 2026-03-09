@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <title>Batalha de Seguidores</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
 <style>
 
 body{
-font-family:Arial;
 background:#0f0f0f;
+font-family:Arial;
 color:white;
 text-align:center;
 }
@@ -17,37 +20,37 @@ h1{
 margin-top:30px;
 }
 
-table{
-margin:auto;
-width:80%;
-border-collapse:collapse;
-margin-top:30px;
+input{
+padding:12px;
+margin:5px;
+border-radius:6px;
+border:none;
 }
 
-th, td{
+button{
 padding:12px;
-border-bottom:1px solid #333;
+background:#ff0050;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+table{
+margin:auto;
+margin-top:30px;
+width:80%;
+border-collapse:collapse;
 }
 
 th{
 background:#ff0050;
+padding:12px;
 }
 
-tr:hover{
-background:#1a1a1a;
-}
-
-input{
-padding:10px;
-margin:10px;
-}
-
-button{
-padding:10px;
-background:#ff0050;
-border:none;
-color:white;
-cursor:pointer;
+td{
+padding:12px;
+border-bottom:1px solid #333;
 }
 
 </style>
@@ -58,9 +61,10 @@ cursor:pointer;
 
 <h1>⚔️ Batalha de Seguidores</h1>
 
-<input id="nome" placeholder="@seuuser">
-<input id="seguidores" placeholder="seguidores">
-<button onclick="adicionar()">Entrar na batalha</button>
+<input id="user" placeholder="@usuario">
+<input id="pontos" placeholder="pontos">
+
+<button onclick="entrar()">Entrar na batalha</button>
 
 <table>
 
@@ -68,7 +72,7 @@ cursor:pointer;
 <tr>
 <th>Posição</th>
 <th>Usuário</th>
-<th>Seguidores</th>
+<th>Pontos</th>
 </tr>
 </thead>
 
@@ -78,40 +82,60 @@ cursor:pointer;
 
 <script>
 
-let jogadores = [];
+const firebaseConfig = {
+apiKey: "SUA_API",
+authDomain: "SEU_PROJETO.firebaseapp.com",
+projectId: "SEU_PROJETO",
+storageBucket: "SEU_PROJETO.appspot.com",
+messagingSenderId: "XXXX",
+appId: "XXXX"
+};
 
-function adicionar(){
+firebase.initializeApp(firebaseConfig);
 
-let nome = document.getElementById("nome").value;
-let seguidores = parseInt(document.getElementById("seguidores").value);
+const db = firebase.firestore();
 
-jogadores.push({nome, seguidores});
+function entrar(){
 
-jogadores.sort((a,b)=>b.seguidores-a.seguidores);
+let user = document.getElementById("user").value;
+let pontos = parseInt(document.getElementById("pontos").value);
 
-mostrar();
+db.collection("ranking").add({
+user:user,
+pontos:pontos
+});
 
 }
 
-function mostrar(){
+function carregar(){
 
-let tabela = document.getElementById("ranking");
+db.collection("ranking")
+.orderBy("pontos","desc")
+.onSnapshot(snapshot=>{
 
-tabela.innerHTML="";
+let html="";
 
-jogadores.forEach((p,i)=>{
+snapshot.docs.forEach((doc,i)=>{
 
-tabela.innerHTML += `
+let d = doc.data();
+
+html += `
 <tr>
 <td>#${i+1}</td>
-<td>${p.nome}</td>
-<td>${p.seguidores}</td>
+<td>${d.user}</td>
+<td>${d.pontos}</td>
 </tr>
 `;
 
 });
 
+document.getElementById("ranking").innerHTML = html;
+
+});
+
 }
+
+carregar();
 
 </script>
 
