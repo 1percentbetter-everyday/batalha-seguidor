@@ -13,22 +13,41 @@ color:white;
 text-align:center;
 }
 
+h1{
+margin-top:30px;
+}
+
+table{
+margin:auto;
+width:80%;
+border-collapse:collapse;
+margin-top:30px;
+}
+
+th, td{
+padding:12px;
+border-bottom:1px solid #333;
+}
+
+th{
+background:#ff0050;
+}
+
+tr:hover{
+background:#1a1a1a;
+}
+
 input{
 padding:10px;
+margin:10px;
 }
 
 button{
 padding:10px;
 background:#ff0050;
-color:white;
 border:none;
-}
-
-li{
-background:#1a1a1a;
-margin:10px;
-padding:10px;
-border-radius:10px;
+color:white;
+cursor:pointer;
 }
 
 </style>
@@ -39,42 +58,58 @@ border-radius:10px;
 
 <h1>⚔️ Batalha de Seguidores</h1>
 
-<input id="user" placeholder="@seuuser">
-<button onclick="buscar()">Buscar</button>
+<input id="nome" placeholder="@seuuser">
+<input id="seguidores" placeholder="seguidores">
+<button onclick="adicionar()">Entrar na batalha</button>
 
-<h2 id="perfil"></h2>
+<table>
 
-<h3>🏆 Ranking</h3>
+<thead>
+<tr>
+<th>Posição</th>
+<th>Usuário</th>
+<th>Seguidores</th>
+</tr>
+</thead>
 
-<ul id="ranking"></ul>
+<tbody id="ranking"></tbody>
+
+</table>
 
 <script>
 
-let ranking = [];
+let jogadores = [];
 
-function buscar(){
+function adicionar(){
 
-let user = document.getElementById("user").value;
+let nome = document.getElementById("nome").value;
+let seguidores = parseInt(document.getElementById("seguidores").value);
 
-let seguidores = Math.floor(Math.random()*100000);
+jogadores.push({nome, seguidores});
 
-ranking.push({
-nome:user,
-seguidores:seguidores
+jogadores.sort((a,b)=>b.seguidores-a.seguidores);
+
+mostrar();
+
+}
+
+function mostrar(){
+
+let tabela = document.getElementById("ranking");
+
+tabela.innerHTML="";
+
+jogadores.forEach((p,i)=>{
+
+tabela.innerHTML += `
+<tr>
+<td>#${i+1}</td>
+<td>${p.nome}</td>
+<td>${p.seguidores}</td>
+</tr>
+`;
+
 });
-
-document.getElementById("perfil").innerHTML =
-user+" tem "+seguidores+" seguidores";
-
-ranking.sort((a,b)=>b.seguidores-a.seguidores);
-
-let html="";
-
-ranking.forEach((p,i)=>{
-html += "<li>#"+(i+1)+" "+p.nome+" - "+p.seguidores+"</li>";
-});
-
-document.getElementById("ranking").innerHTML = html;
 
 }
 
