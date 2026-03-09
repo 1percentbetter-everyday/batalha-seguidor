@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Batalha de Seguidores</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+text-align:center;
+}
+
+input{
+padding:10px;
+}
+
+button{
+padding:10px;
+background:#ff0050;
+color:white;
+border:none;
+}
+
+li{
+background:#1a1a1a;
+margin:10px;
+padding:10px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>⚔️ Batalha de Seguidores</h1>
+
+<input id="user" placeholder="@seuuser">
+<button onclick="buscar()">Buscar</button>
+
+<h2 id="perfil"></h2>
+
+<h3>🏆 Ranking</h3>
+
+<ul id="ranking"></ul>
+
+<script>
+
+let ranking = [];
+
+function buscar(){
+
+let user = document.getElementById("user").value;
+
+let seguidores = Math.floor(Math.random()*100000);
+
+ranking.push({
+nome:user,
+seguidores:seguidores
+});
+
+document.getElementById("perfil").innerHTML =
+user+" tem "+seguidores+" seguidores";
+
+ranking.sort((a,b)=>b.seguidores-a.seguidores);
+
+let html="";
+
+ranking.forEach((p,i)=>{
+html += "<li>#"+(i+1)+" "+p.nome+" - "+p.seguidores+"</li>";
+});
+
+document.getElementById("ranking").innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
